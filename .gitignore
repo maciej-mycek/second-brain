@@ -1,0 +1,26 @@
+# Ignore heavy binaries
+*.mp4
+*.mkv
+*.mov
+*.avi
+*.zip
+*.rar
+*.7z
+*.tar*
+*.iso
+
+# Obsidian cache & workspace layout
+.obsidian/workspace.json
+.obsidian/workspace-mobile.json
+.obsidian/cache/
+
+# System / Temp
+.DS_Store
+Thumbs.db
+*.tmp
+*~
+
+# Credentials & secrets
+*token*.json
+*secret*.json
+*.env
