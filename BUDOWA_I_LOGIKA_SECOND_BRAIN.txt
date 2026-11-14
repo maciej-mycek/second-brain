@@ -1,0 +1,119 @@
+================================================================================
+          BUDOWA I LOGIKA SYSTEMU SECOND BRAIN ORAZ ASYSTENTA HERMES
+================================================================================
+Właściciel: Maciej Mycek
+Data wdrożenia: Listopad 2026
+Środowisko: Laptop Linux (maciek-B5400) + PC Windows + Telefon Android + Garmin
+
+Niniejszy dokument opisuje architekturę, przepływ danych i logikę działania Twojego
+prywatnego asystenta AI (Hermesa) oraz bazy wiedzy Second Brain.
+
+--------------------------------------------------------------------------------
+1. GDZIE CO SIĘ ZNAJDUJE (PODZIAŁ PLIKÓW I FOLDERÓW)
+--------------------------------------------------------------------------------
+
+A. NOTATKI SECOND BRAIN (OBSIDIAN):
+   Ścieżka: /home/maciek/Desktop/second brain/second brain/
+   Przeznaczenie: Wszystkie Twoje notatki Markdown, zadania, przepisy, sprzęt.
+   Synchronizacja: Prywatne repozytorium GitHub:
+   https://github.com/maciej-mycek/second-brain
+   Zasada wagi: Repozytorium jest ultralekkie (< 10 MB). Plik .gitignore blokuje
+   ciężkie pliki wideo, archiwa zip oraz pliki tymczasowe, chroniąc przed
+   limitem 500 MB na GitHubie.
+
+B. CIĘŻKIE ORYGINAŁY ZDJĘĆ I SKANÓW (ARCHIWUM FIZYCZNE):
+   Ścieżka: /home/maciek/Archiwum_Fizyczne/
+   Podfoldery:
+     - Paragony_i_Faktury/Orig/{ROK}/  (oryginalne zdjęcia z aparatu w pełnej jakości)
+     - Numery_Seryjne/Orig/{ROK}/      (oryginalne zdjęcia tabliczek znamionowych)
+     - Backups/                        (lokalne paczki archiwum logiki Hermesa)
+   Synchronizacja: 1-kierunkowa synchronizacja na Dysk Google za pomocą narzędzia
+   rclone do folderu "Archiwum_Second_Brain". Żadne ciężkie zdjęcia nie obciążają
+   GitHuba ani Obsidiana.
+
+C. MÓZG, ZASADY I NARZĘDZIA HERMESA:
+   Ścieżka: /home/maciek/.hermes/
+   Kluczowe pliki:
+     - SOUL.md: "Mózg" Hermesa – 7 żelaznych reguł zachowania, formatowania i logiki.
+     - config.yaml: Konfiguracja modeli LLM (gemini-3.5-flash-lite), providerów i platform.
+     - .env: Tajne klucze API (Telegram Bot, Google Maps, klucze Gemini).
+     - scripts/:
+         * traffic_check.py: Sprawdzanie korków w Lublinie i tras alternatywnych.
+         * shopping_sync.py: Obustronna synchronizacja list zakupów z Google Tasks.
+         * process_purchase_photo.py: Kompresja zdjęć do WebP i tworzenie kart gwarancji.
+         * backup_all.py: Codzienna kopia zapasowa i raporty na Telegramie.
+
+--------------------------------------------------------------------------------
+2. LOGIKA LIST ZAKUPÓW I WIDŻETÓW W TELEFONIE
+--------------------------------------------------------------------------------
+Listy zostały celowo rozdzielone na dwie niezależne:
+
+1. ZAKUPY LOKALNE (Zakupy_Lokalne.md):
+   - Artykuły stacjonarne, spożywcze, marketowe, worki na śmieci itp.
+   - Usługa w tle (hermes-shopping-sync) synchronizuje tę listę co 15 sekund
+     z Twoim kontem Google Tasks (lista "Zakupy Lokalne").
+   - Widżet 1 na telefonie oraz zegarek Garmin Fenix 8 wyświetlają tę listę.
+   - Gdy kupisz coś w sklepie i odhaczysz na telefonie/Garminie – pozycja
+     w notatce zostaje przekreślona i przeniesiona na dół.
+
+2. ZAKUPY ONLINE (Zakupy_Online.md):
+   - Zamówienia internetowe, linki z Allegro, elektronika (np. mysz Razer Basilisk).
+   - Synchronizuje się z listą "Zakupy Online" w Google Tasks.
+   - Widżet 2 na telefonie pokazuje tylko te zamówienia, nie mieszając ich ze spożywką.
+
+--------------------------------------------------------------------------------
+3. INTELIGENTNY SYSTEM SPRAWDZANIA KORKÓW (LUBLIN)
+--------------------------------------------------------------------------------
+Punkt startowy powrotu: Turystyczna / Mełgiewska (51.254122, 22.603231)
+Punkt docelowy: Dom (rejon Botanika)
+
+A. Rano (8:45 pn-pt):
+   - Odpala się z harmonogramu cron.
+   - Sprawdza kalendarz polskich świąt ustawowo wolnych od pracy (czerwone kartki) –
+     w święta alert nie jest wysyłany.
+   - Jeśli trasa główna <= 15 min -> krótka informacja o płynnym ruchu.
+   - Jeśli > 15 min -> ostrzeżenie i zestawienie 3 tras alternatywnych (Popiełuszki,
+     3 Maja, Północna) posortowanych od najszybszej.
+
+B. Popołudniu (Powrót do domu – bez zbędnego spamu):
+   - Wyłączono sztywne powiadomienia zegarowe – asystent nie wyśle wiadomości,
+     jeśli wciąż siedzisz w pracy lub nie włączysz Bluetooth/GPS.
+   - Wyzwalanie automatyczne (Wariant A / B):
+     Gdy wsiadasz do auta (połączenie z radiem samochodowym przez Bluetooth) LUB
+     gdy telefon z GPS oddali się o > 300 m od punktu pracy:
+     Telefon (przez automatyzację MacroDroid) wysyła do bota sygnał "powrót".
+   - Zapytanie na żądanie: W każdej chwili możesz zapytać Hermesa głosowo/tekstowo
+     na Telegramie: "korki", "jak trasa?", "wracam wcześniej".
+   - Hermes w 3 sekundy sprawdza Google Routes API i odsyła najlepszą trasę zanim
+     dojedziesz do pierwszego rozwidlenia ulic.
+
+--------------------------------------------------------------------------------
+4. ZDJĘCIA, PARAGONY I NUMERY SERYJNE (BAZA GWARANCJI)
+--------------------------------------------------------------------------------
+Gdy wyślesz Hermesowi zdjęcie paragonu, faktury lub tabliczki znamionowej na Telegramie:
+1. Oryginał w pełnej rozdzielczości (często 10-15 MB) wędruje do /home/maciek/Archiwum_Fizyczne/.
+2. Skrypt process_purchase_photo.py tworzy zoptymalizowaną, ultralekką kopię WebP
+   (waga ~100-200 KB) w folderze Zalaczniki_Lekkie/ wewnątrz Second Brain.
+3. Hermes odczytuje ze zdjęcia datę zakupu, cenę, sklep i numer seryjny (S/N).
+4. Tworzy notatkę Markdown w odpowiedniej kategorii (AGD_i_RTV, Narzedzia, PC itp.)
+   oraz dopisuje wiersz do pliku Baza_Urzadzen.md.
+5. Możesz w każdej chwili zapytać Hermesa: "kiedy kończy się gwarancja na X?" lub
+   "jaki jest numer seryjny falownika?".
+
+--------------------------------------------------------------------------------
+5. HARMONOGRAM AUTOMATYCZNYCH KOPII I RAPORTÓW
+--------------------------------------------------------------------------------
+W harmonogramie zadań Linuksa (crontab) ustawiono:
+
+1. Codziennie o 03:00 w nocy:
+   - Skrypt backup_all.py wykonuje git commit i git push notatek na GitHub.
+   - Pakuje pliki konfiguracyjne i skrypty Hermesa do hermes_logic_latest.tar.gz.
+   - Wysyła nowe pliki z Archiwum_Fizyczne na Dysk Google przez rclone.
+
+2. We wtorki i w piątki o 10:00 rano:
+   - Na Twój Telegram przychodzi krótki raport podsumowujący:
+     * Rozmiar bazy notatek na GitHubie (w MB)
+     * Rozmiar logiki Hermesa (w MB)
+     * Rozmiar archiwum zdjęć i skanów na Dysku Google (w MB)
+     * Potwierdzenie integralności kopii.
+================================================================================
