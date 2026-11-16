@@ -1,7 +1,7 @@
 # 🛒 Zakupy Online
 
 ## Do kupienia:
-- [ ] V4 hyperspeed
+- [ ] fotelik do karmienia
 
 ---
 ## Kupione / W koszyku:
