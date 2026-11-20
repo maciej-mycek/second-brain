@@ -4,6 +4,7 @@
 
 ## 🥗 Przepisy
 - [[Jedzenie_i_Dieta/Przepisy/Salatka_z_kuskusem_perlowym_i_edamame|Sałatka z kuskusem perłowym, serem bałkańskim, ogórkiem i edamame]] *(inspiracja sklepowa)*
+- [[Jedzenie_i_Dieta/Przepisy/Lasagne_ze_szpinakiem_i_wolowina|Lasagne ze szpinakiem i wołowiną]] *(z listy składników)*
 
 ---
 
