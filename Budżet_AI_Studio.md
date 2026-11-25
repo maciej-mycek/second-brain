@@ -19,3 +19,13 @@
 ## ⚙️ Zasady raportowania
 - Codzienny raport na Telegramie o godz. 12:15.
 - Raportowanie statusu konta w Google Cloud Billing oraz szacowanego zużycia środków.
+
+---
+
+## 💰 Bieżące zużycie tokenów (API Gemini)
+- **Okres rozliczeniowy:** 25.11 – 30.11.2026 (specjalny start)
+- **Szacowany koszt w okresie:** **0.00 PLN**
+- **Tokeny wejściowe:** 0
+- **Tokeny wyjściowe:** 0
+- **Status alertów:** Powiadomienie na Telegramie wysyłane automatycznie przy przekroczeniu każdego pełnego 1,00 PLN. Od 1 grudnia reset comiesięczny.
+

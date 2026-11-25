@@ -10,6 +10,9 @@
 ---
 
 ## ⏰ Przypomnienia punktowe (jednorazowe na dany termin)
+### 25 listopada 2026 r.
+- [ ] 01:44 – test czy działa ⏱️
+
 ### 12 listopada 2026 r.
 - [ ] 07:45 – Odbierz paczki DPD i Paczkomat 📦
 - [ ] 08:00 – Odbierz paczki DPD i Paczkomat 📦
